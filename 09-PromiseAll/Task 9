@@ -1,0 +1,40 @@
+/**
+ * * Should return a promise that resolves with the value after delayInMs
+ *
+ * @param {any} value (Примітка: в аргументах функції є тільки delay, тому ми повертаємо його)
+ * @param {number} delay 
+ * @return {Promise<any>} - A promise that will resolve with the value after delayInMs milliseconds
+ */
+function job(delay) {
+    // Повертаємо новий проміс
+    return new Promise(resolve => {
+        // Ставимо таймер на передану кількість мілісекунд
+        setTimeout(() => {
+            resolve(delay); // Коли час вийде - проміс успішно виконається і поверне значення delay
+        }, delay);
+    });
+}
+
+// Run 'job' function with delays 1000, 2000, 500, 1500 and 
+// use Promise.all to print `done ${delay}` in console when every task is done
+
+// Запускаємо всі 4 завдання ПАРАЛЕЛЬНО і чекаємо на їх завершення
+Promise.all([
+    job(1000),
+    job(2000),
+    job(500),
+    job(1500)
+])
+.then(results => {
+    // Цей блок виконається ТІЛЬКИ тоді, коли найдовший проміс (2000мс) завершить роботу.
+    // results - це масив результатів: [1000, 2000, 500, 1500]
+    
+    // Проходимось по масиву результатів і виводимо кожен у консоль
+    results.forEach(delay => {
+        console.log(`done ${delay}`);
+    });
+})
+.catch(error => {
+    // На всякий випадок додаємо обробку помилок
+    console.error("Сталася помилка:", error);
+});
